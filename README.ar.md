@@ -144,18 +144,18 @@ cargo publish
 
 ```mermaid
 flowchart TD
-    A["Text + TextShape<br/>(font, size_mm, layout, bold, join_overlap, kashida)"] --> B["Bidi runs per line<br/>unicode-bidi, kashida insertion"]
-    B --> C["Shaping<br/>rustybuzz (contextual Arabic forms, ligatures)"]
-    C --> D["Layout<br/>size rule (alef / cap height), spacing, alignment"]
-    D --> E{"Output"}
-    E -->|"render / outline"| F["Glyph outlines → regions<br/>nonzero fill, bold, min column width,<br/>small-part enlargement, join overlap"]
-    F --> G["Arc / path warping, centring, merging<br/>TextOutlines (regions + PathData)"]
-    E -->|"glyph_objects"| H{"Glyph in the font's .tzf?"}
-    H -->|yes| I["Pre-digitized pieces<br/>satin / fill / run + anchors"]
-    H -->|no| J["Convert on the fly<br/>skeleton → satin columns / fills"]
-    I --> K["Placement with the same layout<br/>min satin width, dot enlargement"]
+    A["Text + TextShape<br>font, size_mm, layout, bold, join_overlap, kashida"] --> B["Bidi runs per line<br>unicode-bidi, kashida insertion"]
+    B --> C["Shaping<br>rustybuzz: contextual Arabic forms, ligatures"]
+    C --> D["Layout<br>size rule: alef or cap height, spacing, alignment"]
+    D --> E["Output"]
+    E -->|"render / outline"| F["Glyph outlines to regions<br>nonzero fill, bold, min column width,<br>small-part enlargement, join overlap"]
+    F --> G["Arc / path warping, centring, merging<br>TextOutlines: regions + PathData"]
+    E -->|"glyph_objects"| H["Glyph in the font .tzf file?"]
+    H -->|"yes"| I["Pre-digitized pieces<br>satin / fill / run + anchors"]
+    H -->|"no"| J["Convert on the fly<br>skeleton to satin columns / fills"]
+    I --> K["Placement with the same layout<br>min satin width, dot enlargement"]
     J --> K
-    K --> L["Stitch objects in sew order<br/>entry/exit chained, joined_to_next"]
+    K --> L["Stitch objects in sew order<br>entry/exit chained, joined_to_next"]
 ```
 
 <div dir="rtl">
@@ -166,15 +166,15 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    P["Glyph polygon"] --> R["Scanline raster<br/>(grid of cells)"]
-    R --> DT["Exact Euclidean<br/>distance transform"]
-    DT --> ZS["Zhang–Suen thinning<br/>(medial axis)"]
-    ZS --> PG["Pruned skeleton graph<br/>(spurs removed, branches)"]
-    PG --> RC["Perpendicular ray casting<br/>rail A / rail B per branch"]
-    RC --> W{"Column width"}
-    W -->|"≤ max satin width"| S["Satin column"]
-    W -->|"too wide / poorly covered"| FL["Fill region"]
-    P -.->|"compact part (dot, haraka)"| DOT["One short satin<br/>along the principal axis"]
+    P["Glyph polygon"] --> R["Scanline raster<br>grid of cells"]
+    R --> DT["Exact Euclidean<br>distance transform"]
+    DT --> ZS["Zhang-Suen thinning<br>medial axis"]
+    ZS --> PG["Pruned skeleton graph<br>spurs removed, branches"]
+    PG --> RC["Perpendicular ray casting<br>rail A and rail B per branch"]
+    RC --> W["Column width"]
+    W -->|"up to max satin width"| S["Satin column"]
+    W -->|"too wide or poorly covered"| FL["Fill region"]
+    P -.->|"compact part: dot, haraka"| DOT["One short satin<br>along the principal axis"]
 ```
 
 <div dir="rtl">
@@ -185,14 +185,14 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    F[".tzf file"] --> M["Magic: b&quot;TZF1&quot; (4 bytes)"]
+    F[".tzf file"] --> M["Magic bytes: TZF1, 4 bytes"]
     F --> Z["DEFLATE stream"]
-    Z --> J["JSON TzfFont<br/>version, font_id, units_per_em,<br/>ref_units, ref_size_mm (20), max_satin_mm (8)"]
-    J --> G["glyphs[] sorted by gid"]
-    G --> GL["TzfGlyph<br/>gid, pieces[], left anchor, right anchor"]
-    GL --> S["satin { a, b }<br/>a[i] faces b[i]"]
-    GL --> FI["fill { rings }<br/>outer ring then holes"]
-    GL --> RU["run { pts }"]
+    Z --> J["JSON TzfFont<br>version, font_id, units_per_em,<br>ref_units, ref_size_mm = 20, max_satin_mm = 8"]
+    J --> G["glyphs, sorted by gid"]
+    G --> GL["TzfGlyph<br>gid, pieces, left anchor, right anchor"]
+    GL --> S["satin: rails a and b<br>point i of a faces point i of b"]
+    GL --> FI["fill: rings<br>outer ring then holes"]
+    GL --> RU["run: pts"]
 ```
 
 <div dir="rtl">
@@ -205,13 +205,13 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    IN[".tzf + outline font"] --> V["Validity<br/>register_tzf rules"]
-    V --> O["Outline match<br/>(glyph boxes)"]
-    O --> C["Coverage<br/>script letters, digits, French accents"]
-    C --> W["Satin widths at 20 mm<br/>→ recommended size range"]
-    W --> J["Arabic joins<br/>anchors + sewn without trim"]
-    J --> RD["Sample renders<br/>20 mm and 5 mm"]
-    RD --> Q["QualityReport<br/>ok, errors, warnings, stitch style"]
+    IN[".tzf + outline font"] --> V["Validity<br>register_tzf rules"]
+    V --> O["Outline match<br>glyph boxes"]
+    O --> C["Coverage<br>script letters, digits, French accents"]
+    C --> W["Satin widths at 20 mm<br>gives recommended size range"]
+    W --> J["Arabic joins<br>anchors + sewn without trim"]
+    J --> RD["Sample renders<br>20 mm and 5 mm"]
+    RD --> Q["QualityReport<br>ok, errors, warnings, stitch style"]
 ```
 
 <div dir="rtl">
