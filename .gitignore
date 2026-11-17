@@ -1,0 +1,6 @@
+/target
+*.svg
+*.tzf.tmp
+.DS_Store
+.idea/
+.vscode/

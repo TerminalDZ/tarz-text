@@ -1,0 +1,38 @@
+[package]
+name = "tarz-text"
+version = "1.0.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT"
+authors = ["Idriss Boukmouche"]
+description = "Embroidery lettering engine: Arabic/Latin shaping, bidi layout, satin/fill stitch shapes and the .tzf pre-digitized embroidery font format."
+repository = "https://github.com/TerminalDZ/tarz-text"
+homepage = "https://github.com/TerminalDZ/tarz-text"
+documentation = "https://docs.rs/tarz-text"
+readme = "README.md"
+keywords = ["embroidery", "arabic", "typography", "text-shaping", "fonts"]
+categories = ["text-processing", "graphics", "rendering"]
+include = [
+  "/src/**",
+  "/assets/fonts/**",
+  "/examples/**",
+  "/tests/**",
+  "/Cargo.toml",
+  "/README.md",
+  "/README.ar.md",
+  "/LICENSE",
+  "/CHANGELOG.md",
+]
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+geo = "0.33"
+ttf-parser = "0.25"
+rustybuzz = "0.20"
+unicode-bidi = "0.3"
+flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
+
+[profile.dev.package."*"]
+opt-level = 2
